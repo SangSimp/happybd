@@ -125,32 +125,40 @@
     </div>
 
     <script>
-        // Bắn pháo hoa ngay khi mở
-        window.onload = function() {
-            setTimeout(fireConfetti, 1000); // Đợi 1 giây sau khi thẻ hiện ra thì bắn
-        };
-
+       <script>
+        // Hàm bắn pháo giấy
         function fireConfetti() {
-             // Hiệu ứng pháo hoa hoành tráng hơn
-            var duration = 3 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function random range(min, max) {
-              return Math.random() * (max - min) + min;
+            // Kiểm tra xem thư viện pháo giấy đã tải được chưa
+            if (typeof confetti === 'undefined') {
+                // Nếu lỗi không tải được pháo, thì hiện thông báo thay thế
+                alert("🎉 Chúc Mừng Sinh Nhật! (Hiệu ứng pháo giấy bị lỗi mạng nên không hiện ra, nhưng tấm lòng vẫn ở đây!) ❤️");
+                return;
             }
 
-            var interval = setInterval(function() {
-              var timeLeft = animationEnd - Date.now();
+            // Nếu ok thì bắn pháo
+            var count = 200;
+            var defaults = {
+                origin: { y: 0.7 }
+            };
 
-              if (timeLeft <= 0) {
-                return clearInterval(interval);
-              }
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
 
-              var particleCount = 50 * (timeLeft / duration);
-              // since particles fall down, start a bit higher than random
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+
+        // Tự động bắn khi mở web (thử sau 1 giây để đảm bảo web tải xong)
+        window.onload = function() {
+            setTimeout(fireConfetti, 1000);
+        };
+    </script>
             }, 250);
         }
     </script>
